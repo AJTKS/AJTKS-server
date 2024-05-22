@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Status</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function checkStatus(taskId) {
+            $.get('/task/' + taskId, function(data) {
+                if (data.state === 'SUCCESS') {
+                    $('#status').text('Processing complete!');
+                    $('#result').html(data.result.map(item => `${item[1]} - ${item[0]}`).join("<br>"));
+                } else if (data.state === 'FAILURE') {
+                    $('#status').text('Error: ' + data.status);
+                } else {
+                    $('#status').text('Processing: ' + data.status);
+                    setTimeout(() => { checkStatus(taskId); }, 2000);
+                }
+            });
+        }
+    </script>
+</head>
+<body onload="checkStatus('{{ task_id }}')">
+    <h1>Upload Status</h1>
+    <p id="status">Checking status...</p>
+    <h2>Results:</h2>
+    <p id="result"></p>
+</body>
+</html>

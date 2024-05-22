@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Data Display</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: '/data',
+                type: 'GET',
+                success: function(response) {
+                    // 데이터를 렌더링하는 함수 호출
+                    renderData(response[1]);
+                },
+                error: function(error) {
+                    console.log("Error:", error);
+                }
+            });
+
+            function renderData(data) {
+                // 데이터가 배열 형태로 있는지 확인하고, 각 요소를 순회
+                console.log(data)
+                if (Array.isArray(data)) {
+                    data.forEach(function(item) {
+                        // HTML 리스트에 각 음악 정보를 추가
+                        $('#data-list').append('<li>' + item.Singer + ' - ' + item.musicName + '</li>');
+                    });
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Upload Audio File</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="audio/*">
+        <input type="submit" value="Upload">
+    </form>
+    <h1>알잘딱깔센 추천:</h1>
+    <ul id="data-list">
+    </ul>
+</body>
+</html>
